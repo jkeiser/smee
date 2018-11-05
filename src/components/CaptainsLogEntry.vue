@@ -5,13 +5,17 @@
 </template>
 
 <script>
+// Bring in moment.js
 import moment from 'moment'
+
 export default {
     name: 'CaptainsLogEntry',
     props: {
         timestamp: Date,
         text: String,
     },
-    methods: { time() { return moment(this.timestamp).format('h:mm') } }
+    methods: {
+        time() { return moment(this.timestamp).format('H:mm') }
+    }
 }
 </script>
