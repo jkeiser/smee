@@ -1,43 +1,58 @@
 <template>
   <div>
-    <router-view></router-view>
-    <GoogleAuthenticator ref="google"
-      clientId="662782559552-gppt0aji4fop5bqndkdpah5epkfbcsnv.apps.googleusercontent.com"
-      clientSecret="vUi_WGXf_06W3WZYl01qTZZo"
+    <sui-button
+      social="google"
+      icon="google"
+      v-bind:loading="$gapi.signingInOrOut"
+      v-bind:positive="shouldSignIn"
+      v-on:click="shouldSignIn ? $gapi.signIn() : $gapi.signOut()"
+      :content="shouldSignIn ? 'Sign In' : 'Sign Out'"
     />
+    <sui-label v-bind:key="label.name" v-for="label in labels">{{label.name}}</sui-label>
+    <!-- <router-view></router-view>
+    -->
   </div>
 </template>
 
 <script>
-//
-// Set up routes
-//
-import GoogleAuthenticator from './components/authenticator/GoogleAuthenticator.vue'
-import VueRouter from 'vue-router'
-import CaptainsLog from './components/CaptainsLog.vue'
-import EmailCabinet from './components/EmailCabinet.vue'
-import NotFound from './components/NotFound.vue'
+/* eslint-disable no-console */
+// //
+// // Set up routes
+// //
+// import GoogleAuthenticator from './components/authenticator/GoogleAuthenticator.vue'
+// import VueRouter from 'vue-router'
+// import CaptainsLog from './components/CaptainsLog.vue'
+// import EmailCabinet from './components/EmailCabinet.vue'
+// import NotFound from './components/NotFound.vue'
 
-var router = new VueRouter({
-  mode: 'history',
-  routes: [
-    { path: '/', redirect: '/captainslog' },
-    { path: '/captainslog', component: CaptainsLog },
-    { path: '/emailcabinet', component: EmailCabinet },
-    ...GoogleAuthenticator.routes,
-    { path: '*', component: NotFound },
-  ]
-})
+// var router = new VueRouter({
+//   mode: 'history',
+//   routes: [
+//     { path: '/', redirect: '/captainslog' },
+//     { path: '/captainslog', component: CaptainsLog },
+//     { path: '/emailcabinet', component: EmailCabinet },
+//     ...GoogleAuthenticator.routes,
+//     { path: '*', component: NotFound },
+//   ]
+// })
 
 export default {
     name: 'app',
-    mounted: function() {
-        console.log(this.$refs.google.client)
+    computed: {
+      shouldSignIn: function() { return !this.$gapi.isSignedIn },
     },
-    components: { GoogleAuthenticator },
-    // methods: {
-    //   authenticate: function(scopes) { return this.$refs.google.authenticate(scopes) }
-    // },
-    router
+    asyncComputed: {
+      emailClient: async function() {
+        let client = await this.$gapi.client('https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest')
+        return client.gmail
+      },
+      labels: async function() {
+        if (this.emailClient == null) { return [] }
+        let response = await this.emailClient.users.labels.list({'userId': 'me'})
+        console.log(response.result.labels)
+        return response.result.labels
+      }
+    },
+    // router
 }
 </script>
