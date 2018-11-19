@@ -30,7 +30,12 @@ function logActionPromise(actionDescription, promiseCallback) {
     )
 }
 
+function logActionGooglePromise(actionDescription, googlePromise) {
+    logActionPromise(actionDescription, (resolve, reject) => googlePromise.then(resolve, reject))
+}
+
 logAction.async = logActionAsync
 logAction.promise = logActionPromise
+logAction.googlePromise = logActionGooglePromise
 
 export default logAction

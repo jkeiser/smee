@@ -46,6 +46,10 @@ export default {
         let client = await this.$gapi.client('https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest')
         return client.gmail
       },
+      messages: async function() {
+        if (this.emailClient == null) { return [] }
+        return await this.emailClient.users.emails.list({'userId': 'me'})
+      },
       labels: async function() {
         if (this.emailClient == null) { return [] }
         let response = await this.emailClient.users.labels.list({'userId': 'me'})

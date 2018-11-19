@@ -63,14 +63,14 @@ let uninitializedGapi = loadGapi(GapiJavaScriptUrl, GapiLibraries)
  * 
  * May only be called once.
  */
-gapi.initialize = async ({clientId, scope}) => {
+gapi.initialize = async ({ clientId, scope }) => {
     delete gapi.initialize
     try {
         let initializedGapi = await uninitializedGapi
         await initializedGapi.auth2.init({ client_id: clientId, scope: scope.join(' ') })
         await logAction.async(`initializing gapi with client ID ${clientId} and scope ${scope}`, initializedGapi.auth2.init({ client_id: clientId, scope: scope.join(' ') }))
         gapiInitializeResolve(initializedGapi)
-    } catch(error) {
+    } catch (error) {
         gapiInitializeReject(error)
     }
 }
