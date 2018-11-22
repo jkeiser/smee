@@ -1,6 +1,10 @@
 <template>
     <sui-container>
-        <h1 is="sui-header" block text-align="center"><sui-icon :name="icon" />{{ title }}<SignInButton /></h1>
+        <sui-menu>
+            <sui-menu-item header content="Smee" />
+            <a is="sui-menu-item" v-for="page in $root.pages" :key="page.data().title" :href="page.data().path" :icon="page.data().icon" :content="page.data().title" :active="$parent.path == page.data().path"/>
+            <sui-menu-item position="right"><SignInButton /></sui-menu-item>
+        </sui-menu>
         <sui-segment vertical><slot /></sui-segment>
     </sui-container>
 </template>
@@ -8,10 +12,6 @@
 <script>
 /* eslint-disable no-console */
 export default {
-    props: {
-        icon: String,
-        title: String
-    },
-    mounted: function() { console.warn("HI THERE")}
+    mounted: function() { console.log(this.$parent.path) }
 }
 </script>

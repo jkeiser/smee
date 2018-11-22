@@ -1,5 +1,5 @@
 <template>
-    <AppPage title="Email Cabinet" icon="email">
+    <AppPage title="Email Cabinet">
         <Labels />
     </AppPage>
 </template>
@@ -8,6 +8,13 @@
 import Labels from './Labels.vue'
 
 export default {
+    data: function() {
+        return {
+            path: '/emailcabinet',
+            title: 'Email Cabinet',
+            icon: 'anchor',
+        }
+    },
     components: { Labels },
 }
 </script>

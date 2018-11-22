@@ -1,5 +1,5 @@
 <template>
-    <AppPage title="Captain's Log" icon="book">
+    <AppPage>
         <CaptainsLogEntry v-for="entry in entries" :key="entry.id" v-bind="entry" />
         <sui-segment vertical>
             <sui-input icon="pencil" v-on:change="addMessage($event)" />
@@ -8,11 +8,17 @@
 </template>
 
 <script>
-import CaptainsLogEntry from './CaptainsLogEntry.vue'
+import CaptainsLogEntry from './CaptainsLogEntry'
 
 export default {
-    name: 'CaptainsLog',
-    data() { return { entries: [] } },
+    data() {
+        return {
+            entries: [],
+            path: '/captainslog',
+            title: 'Captain\'s Log',
+            icon: 'book',
+        }
+    },
     methods: {
         addMessage(event) {
             var text = event.target.value

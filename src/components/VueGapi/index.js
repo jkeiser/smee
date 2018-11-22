@@ -28,7 +28,6 @@ const VueGapi = {
         return {
             // Core gapi objects
             gapiPromise,
-            // authInstance: null,
 
             // State
             currentUser: null,
@@ -41,12 +40,6 @@ const VueGapi = {
         gapi: async function() {
             return await this.gapiPromise
         },
-        // gmail: async function() {
-        //     if (this.client) {
-        //         await this.loadDiscoveryDoc('https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest')
-        //         return this.client.gmail
-        //     }
-        // },
     },
     computed: {
         authInstance: function() {
@@ -57,6 +50,19 @@ const VueGapi = {
         client: function() {
             if (this.signInState == SignInState.SIGNED_IN) {
                 return this.gapi.client
+            }
+        },
+        basicProfile: function() {
+            if (this.currentUser) {
+                let profile = this.currentUser.getBasicProfile()
+                return {
+                    id: profile.getId(),
+                    name: profile.getName(),
+                    givenName: profile.getGivenName(),
+                    familyName: profile.getFamilyName(),
+                    imageUrl: profile.getImageUrl(),
+                    email: profile.getEmail(),
+                }
             }
         },
         inProgress: function() {
@@ -131,6 +137,10 @@ const VueGapi = {
                 this.isSignedIn = authInstance.isSignedIn.get()
                 authInstance.isSignedIn.listen(isSignedIn => {
                     this.isSignedIn = isSignedIn
+                });
+                this.currentUser = authInstance.currentUser.get()
+                authInstance.currentUser.listen(currentUser => {
+                    this.currentUser = currentUser
                 });
             }
         },
