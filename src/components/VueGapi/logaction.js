@@ -1,25 +1,26 @@
 /* eslint-disable no-console */
+require('log-timestamp')
 
 function logAction(actionDescription, action) {
-    console.info('Starting ' + actionDescription + ' ...')
+    console.info(`Starting ${actionDescription} ...`)
     try {
         let result = action()
-        console.info('Succeeded ' + actionDescription + '.')
+        console.info(`Succeeded ${actionDescription}.`)
         return result
     } catch (err) {
-        console.error('Failed ' + actionDescription + ':')
+        console.error(`Failed ${actionDescription}:`)
         console.error(err)
     }
 }
 
 async function logActionAsync(actionDescription, promise) {
-    console.info('Starting ' + actionDescription + ' ...')
+    console.info(`Starting ${actionDescription} ...`)
     try {
         let result = await promise
-        console.info('Succeeded ' + actionDescription + '.')
+        console.info(`Succeeded ${actionDescription}.`)
         return result
     } catch (err) {
-        console.error('Failed ' + actionDescription + ':')
+        console.error(`Failed ${actionDescription}:`)
         console.error(err)
     }
 }

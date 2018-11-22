@@ -1,0 +1,18 @@
+<template>
+    <sui-segment>
+        <Label v-for="label in labels" :key="label.id" v-if="label.labelListVisibility != 'labelHide'" :name="label.name" />
+    </sui-segment>
+</template>
+
+<script>
+import Label from './Label'
+export default {
+    components: { Label },
+    asyncComputed: {
+        labels: async function() {
+            let response = await this.$gapi.query('listing labels', client => client.gmail.users.labels.list({'userId': 'me','fields': 'labels(id,name,labelListVisibility)'}))
+            return response.result.labels
+        }
+    },
+}
+</script>

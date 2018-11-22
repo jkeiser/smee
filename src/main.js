@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // Initialize Vue
 import Vue from 'vue'
 Vue.config.productionTip = false
@@ -15,26 +16,18 @@ Vue.use(SuiVue)
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
-import Gapi from './components/gapi'
-Vue.use(Gapi, {
+import VueGapi from './components/VueGapi'
+Vue.use(VueGapi, {
     clientId: '662782559552-gppt0aji4fop5bqndkdpah5epkfbcsnv.apps.googleusercontent.com',
-    scope: [
-        'https://www.googleapis.com/auth/gmail.readonly'
-    ]
+    scope: [ 'https://www.googleapis.com/auth/gmail.readonly' ],
+    discoveryDocs: [ 'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest' ],
 })
-
-// // Use vue-gapi
-// import VueGAPI from 'vue-gapi';
-// Vue.use(VueGAPI, {
-//     apiKey: 'vUi_WGXf_06W3WZYl01qTZZo',
-//     clientId: '662782559552-gppt0aji4fop5bqndkdpah5epkfbcsnv.apps.googleusercontent.com',
-//     discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
-//     scope: 'https://www.googleapis.com/auth/spreadsheets'
-//     // see all available scopes here: https://developers.google.com/identity/protocols/googlescopes'
-//   }
-// );
 
 // Instantiate the app
 import App from './App.vue'
+import AppPage from './components/AppPage'
+import SignInButton from './components/SignInButton'
+Vue.component('AppPage', AppPage)
+Vue.component('SignInButton', SignInButton)
 var vue = new Vue({ render: h => h(App) })
 vue.$mount('#app')
