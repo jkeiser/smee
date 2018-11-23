@@ -10,8 +10,9 @@ export default {
     components: { Label },
     asyncComputed: {
         labels: async function() {
-            let response = await this.$gapi.query('listing labels', client => client.gmail.users.labels.list({'userId': 'me','fields': 'labels(id,name,labelListVisibility)'}))
-            return response.result.labels
+            return []
+            // let response = await this.$gapi.query('listing labels', client => client.gmail.users.labels.list({'userId': 'me','fields': 'labels(id,name,labelListVisibility)'}))
+            // return response.result.labels
         }
     },
 }

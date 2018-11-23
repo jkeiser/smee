@@ -1,8 +1,13 @@
 <template>
     <sui-container>
         <sui-menu>
-            <sui-menu-item header content="Smee" />
-            <a is="sui-menu-item" v-for="page in $root.pages" :key="page.data().title" :href="page.data().path" :icon="page.data().icon" :content="page.data().title" :active="$parent.path == page.data().path"/>
+            <sui-menu-item header><h1>Smee</h1></sui-menu-item>
+            <router-link v-for="route in navRoutes" :key="route.path"
+                :to="route.path"
+                is="sui-menu-item" :active="route == $route"
+            >
+                <sui-icon :name="route.meta.nav.icon" v-if="route.meta.nav.icon" />{{ route.meta.nav.title }}
+            </router-link>
             <sui-menu-item position="right"><SignInButton /></sui-menu-item>
         </sui-menu>
         <sui-segment vertical><slot /></sui-segment>
@@ -11,7 +16,16 @@
 
 <script>
 /* eslint-disable no-console */
+import SignInButton from './SignInButton'
 export default {
-    mounted: function() { console.log(this.$parent.path) }
+    components: { SignInButton },
+    computed: {
+        navRoutes: function() {
+            // Get all routes with a navTitle
+            console.log(this.$route)
+            return this.$router.options.routes
+                .filter(route => route.meta && route.meta.nav)
+        },
+    },
 }
 </script>

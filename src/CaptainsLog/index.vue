@@ -14,9 +14,6 @@ export default {
     data() {
         return {
             entries: [],
-            path: '/captainslog',
-            title: 'Captain\'s Log',
-            icon: 'book',
         }
     },
     methods: {

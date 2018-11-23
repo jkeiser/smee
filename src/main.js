@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 // Initialize Vue
 import Vue from 'vue'
+console.warn("Setting productionTip = false")
 Vue.config.productionTip = false
 
 // Add asyncComputed support
@@ -19,15 +20,13 @@ Vue.use(VueRouter)
 import VueGapi from './components/VueGapi'
 Vue.use(VueGapi, {
     clientId: '662782559552-gppt0aji4fop5bqndkdpah5epkfbcsnv.apps.googleusercontent.com',
-    scope: [ 'https://www.googleapis.com/auth/gmail.readonly' ],
+    scope: 'https://www.googleapis.com/auth/gmail.readonly',
     discoveryDocs: [ 'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest' ],
 })
 
 // Instantiate the app
 import App from './App.vue'
 import AppPage from './components/AppPage'
-import SignInButton from './components/SignInButton'
 Vue.component('AppPage', AppPage)
-Vue.component('SignInButton', SignInButton)
 var vue = new Vue({ render: h => h(App) })
 vue.$mount('#app')

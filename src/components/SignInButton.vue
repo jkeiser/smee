@@ -1,21 +1,27 @@
 <template>
-        <sui-image
-            avatar
-            :src="$gapi.basicProfile.imageUrl"
-            v-if="$gapi.basicProfile"
-            floated="right"
-            />
-        <sui-button
-            social="google"
-            icon="google"
-            :loading="$gapi.inProgress"
-            :positive="$gapi.canSignIn"
-            :content="$gapi.canSignOut ? 'Sign Out' : 'Sign In'"
-            @click="$gapi.canSignOut ? $gapi.signOut() : $gapi.signIn()"
-            floated="right"
-            v-else
-        />
+    <!-- if we're loading, signing in or signing out, show a placeholder or deemphasized image -->
+    <!-- <div :class="{placeholder: $gapi.inProgress}"> -->
+            <sui-button class="SignInButton" circular :disabled="$gapi.inProgress" @click="$gapi.isSignedIn ? $gapi.signOut() : $gapi.signIn()" :loading="$gapi.inProgress">
+                <sui-image v-if="$gapi.basicProfile.imageUrl" circular centered :src="$gapi.basicProfile.imageUrl" />
+            </sui-button>
+    <!-- </div> -->
 </template>
+
+<style>
+.SignInButton {
+    margin: 0px !important;
+    padding: 0px !important; 
+    width: 3rem;
+    height: 3rem;
+}
+.SignInButton img {
+    margin: 0px;
+    padding: 0px; 
+    width: 3rem;
+    height: 3rem;
+}
+</style>
+
 
 <script>
 /* eslint-disable no-console */

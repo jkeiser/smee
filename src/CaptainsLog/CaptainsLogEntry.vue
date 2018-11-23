@@ -15,7 +15,7 @@ export default {
         text: String,
     },
     methods: {
-        time() { return moment(this.timestamp).format('H:mm') }
+        time: function() { return moment(this.timestamp).format('H:mm') }
     }
 }
 </script>

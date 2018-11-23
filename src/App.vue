@@ -1,39 +1,58 @@
 <template>
-  <div>
-    <router-view></router-view>
-  </div>
+    <div>
+      <router-view></router-view>
+    </div>
 </template>
 
 <script>
 /* eslint-disable no-console */
 //
+// Set up components
+//
+import CaptainsLog from './CaptainsLog'
+import EmailCabinet from './EmailCabinet'
+
+//
 // Set up routes
 //
 import VueRouter from 'vue-router'
-import CaptainsLog from './CaptainsLog'
-import EmailCabinet from './EmailCabinet'
-// import TestPage from './components/TestPage'
 import NotFound from './NotFound'
 
-
-const pages = [ CaptainsLog, EmailCabinet ]
-
 var router = new VueRouter({
-  mode: 'history',
-  routes: [
-    { path: '/', redirect: pages[0].data().path },
-    ...pages.map(page => ({ path: page.data().path, component: page })),
-    { path: '*', component: NotFound },
-  ]
+    mode: 'history',
+    routes: [
+        {
+            path: '/',
+            redirect: '/captainslog',
+        },
+        {
+            path: '/captainslog',
+            component: CaptainsLog,
+            meta: {
+                nav: {
+                    title: 'Captain\'s Log',
+                    icon: 'book',
+                }
+            }
+        },
+        {
+            path: '/emailcabinet',
+            component: EmailCabinet,
+            meta: {
+                nav: {
+                    title: 'Email Cabinet',
+                    icon: 'anchor',
+                }
+            },
+        },
+        { path: '*', component: NotFound },
+    ]
 })
-
-import SignInButton from './components/SignInButton.vue'
 
 export default {
     name: 'app',
-    components: { SignInButton },
-    created: function() {
-      this.$root.pages = pages
+    props: {
+        pages: Array
     },
     router,
 }
