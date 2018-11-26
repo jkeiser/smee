@@ -1,7 +1,7 @@
 <template>
-    <sui-segment>
+    <div>
         <Label v-for="label in labels" :key="label.id" v-if="label.labelListVisibility != 'labelHide'" :name="label.name" />
-    </sui-segment>
+    </div>
 </template>
 
 <script>

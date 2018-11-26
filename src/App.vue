@@ -26,6 +26,7 @@ var router = new VueRouter({
             redirect: '/captainslog',
         },
         {
+            name: 'captainslog',
             path: '/captainslog',
             component: CaptainsLog,
             meta: {
@@ -36,6 +37,7 @@ var router = new VueRouter({
             }
         },
         {
+            name: 'emailcabinet',
             path: '/emailcabinet',
             component: EmailCabinet,
             meta: {

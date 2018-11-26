@@ -28,6 +28,7 @@ export const VueGapi = {
         scope: null,
         discoveryDocs: [],
 
+        isInitialized: false,
         isSignedIn: null,
         currentUser: null,
         signingIn: null,
@@ -50,11 +51,11 @@ export const VueGapi = {
                 return {}
             }
         },
-        inProgress: function() {
-            return this.signInState != SignInState.SIGNED_IN && this.signInState != SignInState.SIGNED_OUT;
+        isBusy: function() {
+            return this.signInState != SignInState.SIGNED_IN && this.signInState != SignInState.SIGNED_OUT
         },
         signInState: function() {
-            if (this.isSignedIn == null) {
+            if (!this.isInitialized) {
                 return SignInState.LOADING
             } else if (this.signingIn) {
                 return SignInState.SIGNING_IN
@@ -171,6 +172,7 @@ export const VueGapi = {
                 authInstance.currentUser.listen(currentUser => {
                     this.currentUser = currentUser
                 });
+                this.isInitialized = true
             } else {
                 this.isSignedIn = null
                 this.currentUser = null
