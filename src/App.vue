@@ -7,16 +7,9 @@
 <script>
 /* eslint-disable no-console */
 //
-// Set up components
-//
-import CaptainsLog from './CaptainsLog'
-import EmailCabinet from './EmailCabinet'
-
-//
 // Set up routes
 //
 import VueRouter from 'vue-router'
-import NotFound from './NotFound'
 
 var router = new VueRouter({
     mode: 'history',
@@ -28,7 +21,7 @@ var router = new VueRouter({
         {
             name: 'captainslog',
             path: '/captainslog',
-            component: CaptainsLog,
+            component: () => import('./pages/CaptainsLog'),
             meta: {
                 nav: {
                     title: 'Captain\'s Log',
@@ -39,7 +32,7 @@ var router = new VueRouter({
         {
             name: 'emailcabinet',
             path: '/emailcabinet',
-            component: EmailCabinet,
+            component: () => import('./pages/EmailCabinet'),
             meta: {
                 nav: {
                     title: 'Email Cabinet',
@@ -47,7 +40,7 @@ var router = new VueRouter({
                 }
             },
         },
-        { path: '*', component: NotFound },
+        { path: '*', component: () => import('./pages/NotFound') },
     ]
 })
 
