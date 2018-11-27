@@ -11,7 +11,6 @@
     "loadjs": "^3.5.4",
     "log-timestamp": "^0.2.1",
     "moment": "^2.22.2",
-    "semantic-ui-vue": "^0.5.1",
     "timing2": "^0.3.3",
     "vue": "^2.5.17",
     "vue-async-computed": "^3.5.0",
@@ -21,7 +20,6 @@
     "@vue/cli-plugin-babel": "^3.1.1",
     "@vue/cli-plugin-eslint": "^3.1.5",
     "@vue/cli-service": "^3.1.4",
-    "semantic-ui": "^2.4.2",
     "vue-template-compiler": "^2.5.17"
   },
   "eslintConfig": {

@@ -35,14 +35,11 @@ export default {
         Vue.mixin({
             computed: {
                 $pageLoad: function() {
-                    if (!this.$root.pageLoad) {
-                        this.$root.pageLoad = new LoadTimer({
-                            propsData: {
-                                timeOrigin: timing2.timeOrigin
-                            }
-                        })
-                    }
-                    return this.$root.pageLoad
+                    return new LoadTimer({
+                        propsData: {
+                            timeOrigin: timing2.timeOrigin,
+                        }
+                    })
                 }
             },
         })

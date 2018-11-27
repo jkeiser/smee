@@ -1,17 +1,11 @@
 /* eslint-disable no-console */
 // Initialize Vue
 import Vue from 'vue'
-console.warn("Setting productionTip = false")
 Vue.config.productionTip = false
 
 // Add asyncComputed support
 import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
-
-// Add Semantic UI
-import SuiVue from 'semantic-ui-vue'
-import 'semantic-ui/dist/semantic.min.css'
-Vue.use(SuiVue)
 
 // Add Router
 import VueRouter from 'vue-router'
@@ -33,3 +27,4 @@ import AppPage from './components/AppPage'
 Vue.component('AppPage', AppPage)
 var vue = new Vue({ render: h => h(App) })
 vue.$mount('#app')
+

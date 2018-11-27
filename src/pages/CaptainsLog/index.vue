@@ -1,9 +1,12 @@
 <template>
     <AppPage>
         <CaptainsLogEntry v-for="entry in entries" :key="entry.id" v-bind="entry" />
-        <sui-segment vertical>
-            <sui-input icon="pencil" v-on:change="addMessage($event)" />
-        </sui-segment>
+        <div class="ui vertical segment">
+            <div class="ui icon input" @change="addMessage($event)">
+                <input type="text" placeholder="Say what you care about ...">
+                <i class="ui pencil icon" />
+            </div>
+        </div>
     </AppPage>
 </template>
 

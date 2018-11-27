@@ -1,5 +1,5 @@
 <template>
-    <sui-label>{{ name }}</sui-label>
+    <div class="ui label">{{ name }}</div>
 </template>
 
 <script>

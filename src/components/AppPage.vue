@@ -1,12 +1,11 @@
 <template>
     <!-- Container to give reasonable padding around the whole thing -->
     <div class="ui container">
-        <!-- Stackable makes it (more) responsive -->
         <div class="ui massive top attached tabular menu">
-            <!-- Header -->
+            <!-- Title -->
             <div class="header item">Smee</div>
 
-            <!-- Actual tabs -->
+            <!-- Page Tabs -->
             <div class="menu">
                 <router-link v-for="route in navRoutes" :key="route.name"
                     :to="route.name"
@@ -16,11 +15,12 @@
                 </router-link>
             </div>
 
-            <!-- <div class="right aligned item">hi</div> -->
+            <!-- Sign in / profile button -->
             <div class="right aligned massivesquare item">
                 <SignInButton />
             </div>
         </div>
+
         <!-- The actual tab -->
         <div class="ui bottom attached segment"><slot /></div>
     </div>

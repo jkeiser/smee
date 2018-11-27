@@ -1,7 +1,7 @@
 <template>
-    <sui-segment attached compact>
+    <div class="ui compact attached segment">
         <a class="ui ribbon tiny label">{{ time() }}</a>{{ text }}
-    </sui-segment>
+    </div>
 </template>
 
 <script>
