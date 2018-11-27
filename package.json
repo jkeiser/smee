@@ -8,9 +8,11 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "jquery": "^3.3.1",
     "loadjs": "^3.5.4",
     "log-timestamp": "^0.2.1",
     "moment": "^2.22.2",
+    "semantic-ui-css": "^2.4.1",
     "timing2": "^0.3.3",
     "vue": "^2.5.17",
     "vue-async-computed": "^3.5.0",

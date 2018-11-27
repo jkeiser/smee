@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-require('log-timestamp')
+// require('log-timestamp')
 
 function logAction(actionDescription, action) {
     console.info(`Starting ${actionDescription} ...`)

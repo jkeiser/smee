@@ -39,11 +39,8 @@ export default {
     computed: {
         navRoutes: function() {
             // Get all routes with a navTitle
-            console.log(this.$route)
-            let navRoutes = this.$router.options.routes
+            return this.$router.options.routes
                 .filter(route => route.name && route.meta && route.meta.nav)
-            console.log(navRoutes)
-            return navRoutes
         },
     },
 }

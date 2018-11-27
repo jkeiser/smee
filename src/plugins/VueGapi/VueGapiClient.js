@@ -1,16 +1,25 @@
 /* eslint-disable no-console */
-let LoadedGapi = import('./loadgapi').then(loadgapi => loadgapi.LoadedGapi)
-
+import loadjs from 'loadjs'
 import logAction from './logaction.js'
 import { VueGapiCannotSignInOrOutError } from './VueGapiError'
 
 export const SignInState = {
-    LOADING: 'loading',
-    SIGNED_IN: 'signed in',
-    SIGNING_OUT: 'signing out',
-    SIGNED_OUT: 'signed out',
-    SIGNING_IN: 'signing out',
+    LOADING: "loading",
+    SIGNED_IN: "signed in",
+    SIGNING_OUT: "signing out",
+    SIGNED_OUT: "signed out",
+    SIGNING_IN: "signing out",
 }
+
+/**
+ * URL to gapi.js
+ */
+export const GapiJavaScriptUrl = 'https://apis.google.com/js/api.js'
+
+/**
+ * gapi libraries to load by default
+ */
+export const GapiLibraries = 'client:auth2'
 
 export const VueGapi = {
     data: {
@@ -27,6 +36,7 @@ export const VueGapi = {
     },
     computed: {
         basicProfile: function() {
+            console.info(`Current user ${this.currentUser}`)
             if (this.currentUser) {
                 let basicProfile = this.currentUser.getBasicProfile()
                 return {
@@ -60,7 +70,24 @@ export const VueGapi = {
     },
     asyncComputed: {
         gapi: async function() {
-            let gapi = await LoadedGapi
+            //
+            // Load gapi.js
+            //
+            if (window.gapi) {
+                console.info("gapi.js already loaded.")
+            } else {
+                await logAction.promise(`loading ${GapiJavaScriptUrl}`, (resolve, reject) =>
+                    loadjs(GapiJavaScriptUrl, resolve, reject)
+                )
+            }
+
+            //
+            // Load and initialize client and auth2 libraries
+            //
+            let gapi = window.gapi
+            await logAction.promise(`loading gapi modules ${GapiLibraries}`, (resolve, reject) =>
+                gapi.load(GapiLibraries, { callback: resolve, onerror: reject })
+            )
             await logAction.async(
                 `initializing gapi.auth2 with client_id ${this.clientId} and scope ${this.scope}`,
                 gapi.auth2.init({client_id: this.clientId, scope: this.scope})
@@ -69,6 +96,7 @@ export const VueGapi = {
                 `initializing gapi.client with clientId ${this.clientId}, scope ${this.scope}, and discoveryDocs ${this.discoveryDocs}`,
                 gapi.client.init({ clientId: this.clientId, scope: this.scope, discoveryDocs: this.discoveryDocs })
             )
+
             return gapi
         },
         client: async function() {
