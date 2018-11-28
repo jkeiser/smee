@@ -1,9 +1,24 @@
-/* eslint-disable no-console */
-// Set the GAPI to loading while we load Vue. (Asynchronous)
-import('./plugins/VueGapi/loadgapi')
+//
+// Load long dependencies in the background
+//
+
+// GAPI has a long series of http requests to make
+import './plugins/VueGapi/loadgapi'
+
+// Semantic UI's CSS takes a while and loads a bunch of fonts
+let semanticcss = import('semantic-ui-css/semantic.css')
+
+// Semantic UI's JS is necessary to make things work, but not
+// necessarily to make them look right. (TODO this might not be true :)
+import('./scripts/loadsemanticuijs')
+
+//
+// Load up and render in the background (but don't mount until CSS is ready)
+//
+
+import Vue from 'vue'
 
 // Initialize Vue
-import Vue from 'vue'
 Vue.config.productionTip = false
 
 // Add asyncComputed support
@@ -25,18 +40,14 @@ Vue.use(VueRouter)
 import LoadTimer from './plugins/LoadTimer'
 Vue.use(LoadTimer)
 
-// Instantiate the app
+// Instantiate the app and perform initial render
 import App from './App.vue'
 import AppPage from './components/AppPage'
 Vue.component('AppPage', AppPage)
-var vue = new Vue({ render: h => h(App) })
+let vue = new Vue({ render: h => h(App) })
 
-// Load semantic UI CSS and JS in parallel
-let loadSemanticUi = Promise.all([
-    import('semantic-ui-css/semantic.css'),
-    import('jquery').then(jquery => { window.$ = window.jQuery = jquery.default }).then(import('semantic-ui-css/semantic.js')),
-])
-
-// Once semantic UI is ready, mount the app so our render becomes visible
-loadSemanticUi.then(() => vue.$mount('#app'))
+//
+// When semantic CSS is loaded, mount up and make us visible!
+//
+semanticcss.then(() => vue.$mount('#app'))
 
