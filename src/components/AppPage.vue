@@ -17,7 +17,7 @@
 
             <!-- Sign in / profile button -->
             <div class="right aligned massivesquare item">
-                <SignInButton />
+                <ProfileButton />
             </div>
         </div>
 
@@ -33,9 +33,9 @@
 
 <script>
 /* eslint-disable no-console */
-import SignInButton from './SignInButton'
+import ProfileButton from './ProfileButton'
 export default {
-    components: { SignInButton },
+    components: { ProfileButton },
     computed: {
         navRoutes: function() {
             // Get all routes with a navTitle

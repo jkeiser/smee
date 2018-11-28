@@ -5,12 +5,14 @@
 // GAPI has a long series of http requests to make
 import './plugins/VueGapi/loadgapi'
 
-// Semantic UI's CSS takes a while and loads a bunch of fonts
-let semanticcss = import('semantic-ui-css/semantic.css')
-
-// Semantic UI's JS is necessary to make things work, but not
-// necessarily to make them look right. (TODO this might not be true :)
-import('./scripts/loadsemanticuijs')
+// Semantic UI's CSS and JS take a while and load a bunch of fonts
+let semanticui = Promise.all([
+    import('semantic-ui-css/semantic.css'),
+    import('jquery').then(jquery => {
+        window.$ = window.jQuery = jquery.default
+        import('semantic-ui-css/semantic.js')
+    })
+])
 
 //
 // Load up and render in the background (but don't mount until CSS is ready)
@@ -44,10 +46,12 @@ Vue.use(LoadTimer)
 import App from './App.vue'
 import AppPage from './components/AppPage'
 Vue.component('AppPage', AppPage)
-let vue = new Vue({ render: h => h(App) })
 
 //
 // When semantic CSS is loaded, mount up and make us visible!
 //
-semanticcss.then(() => vue.$mount('#app'))
+semanticui.then(() => {
+    let vue = new Vue({ render: h => h(App) })
+    vue.$mount('#app')
+})
 

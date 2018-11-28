@@ -110,7 +110,7 @@ export const VueGapi = {
         },
         signOut: async function() {
             if (!this.signingOut) {
-                if (!this.signInState != SignInState.SIGNED_IN) {
+                if (this.signInState != SignInState.SIGNED_IN) {
                     throw new VueGapiCannotSignInOrOutError(this.signInState, 'sign out');
                 }
                 this.signingOut = logAction.async('signing out', this.authInstance.signOut())
