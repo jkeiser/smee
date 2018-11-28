@@ -5,12 +5,11 @@
     <!-- Signed in: show profile picture and dropdown card with profile info + sign out button -->
     <!-- Signing out: show profile picture, with spinner -->
     <div v-else-if="isSignedIn" ref="dropdown" class="ui pointing top left dropdown" :class="{loading: isBusy}">
-        <span>
-            <img v-if="avatarUrl" class="ui fluid circular image" :src="avatarUrl" ref="avatar" :data-html="tooltip" />
-            <i v-else class="ui fluid circular google icon" ref="avatar" :data-html="tooltip" />
-        </span>
+        <!-- avatar -->
+        <img v-if="avatarUrl" class="ui fluid circular image" :src="avatarUrl" ref="avatar" :data-html="tooltip" />
+        <i v-else class="ui fluid circular google icon" ref="avatar" :data-html="tooltip" />
 
-        <!-- actual dropdown -->
+        <!-- actual dropdown card -->
         <ProfileCard class="menu" />
     </div>
 
@@ -24,7 +23,6 @@
 <style>
 /* Add fluid icon to take up 100% of the space */
 i.ui.fluid.icon { width: 100% !important; height: 100% !important; padding: 0px; }
-/* div.ui.top.left.dropdown .menu { right: 0; left: auto; } */
 </style>
 
 <script>

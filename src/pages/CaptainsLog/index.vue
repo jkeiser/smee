@@ -1,5 +1,5 @@
 <template>
-    <AppPage>
+    <div>
         <CaptainsLogEntry v-for="entry in entries" :key="entry.id" v-bind="entry" />
         <div class="ui vertical segment">
             <div class="ui icon input" @change="addMessage($event)">
@@ -7,7 +7,7 @@
                 <i class="ui pencil icon" />
             </div>
         </div>
-    </AppPage>
+    </div>
 </template>
 
 <script>

@@ -1,5 +1,13 @@
 <template>
-    <router-view></router-view>
+    <!-- Container to give reasonable padding around the whole thing -->
+    <div class="ui container">
+        <Navbar class="top attached" />
+
+        <!-- The actual tab -->
+        <div class="ui bottom attached segment">
+            <router-view />
+        </div>
+    </div>
 </template>
 
 <script>
@@ -42,11 +50,10 @@ var router = new VueRouter({
     ]
 })
 
+import Navbar from './components/Navbar'
+
 export default {
-    name: 'app',
-    props: {
-        pages: Array
-    },
+    components: { Navbar },
     router,
 }
 </script>

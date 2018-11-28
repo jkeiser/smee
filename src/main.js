@@ -44,8 +44,6 @@ Vue.use(LoadTimer)
 
 // Instantiate the app and perform initial render
 import App from './App.vue'
-import AppPage from './components/AppPage'
-Vue.component('AppPage', AppPage)
 
 //
 // When semantic CSS is loaded, mount up and make us visible!

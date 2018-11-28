@@ -1,7 +1,5 @@
 <template>
-    <AppPage title="Email Cabinet">
-        <Labels />
-    </AppPage>
+    <Labels />
 </template>
 
 <script>
