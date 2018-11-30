@@ -34,17 +34,17 @@ export default {
         isLoadingNormally: function() { return !this.$gapi.isInitialized && !this.$pageLoad.delayedBy(500) },
         isBusy: function() { return this.$gapi.isBusy },
 
-        avatarUrl: function() { return this.$gapi.basicProfile.imageUrl },
+        avatarUrl: function() { return this.$gapi.currentUser.imageUrl },
         tooltip: function() {
-            return `<b>${this.$gapi.basicProfile.name}</b><br>${this.$gapi.basicProfile.email}<br>Google Account`
+            return `<b>${this.$gapi.currentUser.name}</b><br>${this.$gapi.currentUser.email}<br>Google Account`
         }
     },
     methods: {
         signIn: function() { return this.$gapi.signIn() },
         updateDropdown: function() {
             if (this.$refs.dropdown) {
-                $(this.$refs.dropdown).dropdown()
-                $(this.$refs.avatar).popup()
+                window.$(this.$refs.dropdown).dropdown()
+                window.$(this.$refs.avatar).popup()
             }
         },
     },

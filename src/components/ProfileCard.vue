@@ -24,9 +24,9 @@
 <script>
 export default {
     computed: {
-        profileImageUrl: function() { return this.$gapi.basicProfile.imageUrl },
-        name: function() { return this.$gapi.basicProfile.name },
-        email: function() { return this.$gapi.basicProfile.email },
+        profileImageUrl: function() { return this.$gapi.currentUser.imageUrl },
+        name: function() { return this.$gapi.currentUser.name },
+        email: function() { return this.$gapi.currentUser.email },
         signingOut: function() { return this.$gapi.isBusy },
     },
     methods: {

@@ -1,8 +1,7 @@
 /* eslint-disable no-console */
-let LoadedGapi = import('./loadgapi').then(loadgapi => loadgapi.LoadedGapi)
-
-import logAction from './logaction.js'
-import { VueGapiCannotSignInOrOutError } from './VueGapiError'
+import { initializeGapi } from './loadgapi'
+import logAction from '../../scripts/logaction.js'
+import { VueGapiCannotSignInOrOutError, VueGapiAlreadyInstalledError } from './VueGapiError'
 
 export const SignInState = {
     LOADING: 'loading',
@@ -12,34 +11,33 @@ export const SignInState = {
     SIGNING_IN: 'signing out',
 }
 
-export const VueGapi = {
-    data: {
-        // Input parameters set by Vue.install
-        clientId: null,
-        scope: null,
-        discoveryDocs: [],
+export default {
+    install(Vue, {clientId, scope, discoveryDocs}) {
+        if (VueGapi.initializedPromise) {
+            throw new VueGapiAlreadyInstalledError('VueGapi has already been installed! (VueGapi.initializedPromise is already set.)')
+        }
+        VueGapi.initializedGapiPromise = initializeGapi({clientId, scope, discoveryDocs})
+        Vue.prototype.$gapi = new Vue(VueGapi)
+    }
+}
 
-        isInitialized: false,
-        isSignedIn: null,
-        currentUser: null,
-        signingIn: null,
-        signingOut: null,
+const VueGapi = {
+    data: function() {
+        return {
+            isSignedIn: null,
+            currentUser: null,
+            signingIn: null,
+            signingOut: null,
+
+            // If you want to be reactively notified when the gapi is set, use this.
+            gapi: null,
+            // If you want to wait until the gapi is ready and we're all initialized, use this.
+            gapiPromise: this.$_initialize(),
+        }
     },
     computed: {
-        basicProfile: function() {
-            if (this.currentUser) {
-                let basicProfile = this.currentUser.getBasicProfile()
-                return {
-                    id: basicProfile.getId(),
-                    name: basicProfile.getName(),
-                    givenName: basicProfile.getGivenName(),
-                    familyName: basicProfile.getFamilyName(),
-                    imageUrl: basicProfile.getImageUrl(),
-                    email: basicProfile.getEmail(),
-                }
-            } else {
-                return {}
-            }
+        isInitialized: function() {
+            return !!this.gapi
         },
         isBusy: function() {
             return this.signInState != SignInState.SIGNED_IN && this.signInState != SignInState.SIGNED_OUT
@@ -58,38 +56,6 @@ export const VueGapi = {
             }
         },
     },
-    asyncComputed: {
-        gapi: async function() {
-            let gapi = await LoadedGapi
-            await logAction.async(
-                `initializing gapi.auth2 with client_id ${this.clientId} and scope ${this.scope}`,
-                gapi.auth2.init({client_id: this.clientId, scope: this.scope})
-            )
-            await logAction.async(
-                `initializing gapi.client with clientId ${this.clientId}, scope ${this.scope}, and discoveryDocs ${this.discoveryDocs}`,
-                gapi.client.init({ clientId: this.clientId, scope: this.scope, discoveryDocs: this.discoveryDocs })
-            )
-            return gapi
-        },
-        client: async function() {
-            if (this.gapi) {
-                return this.gapi.client
-            }
-        },
-        auth2: async function() {
-            if (this.gapi) {
-                return this.gapi.auth2
-            }
-        },
-        authInstance: async function() {
-            if (this.auth2) {
-                return await logAction.async(
-                    `awaiting auth instance initialization`,
-                    this.auth2.getAuthInstance()
-                )
-            }
-        }
-    },
     methods: {
         /**
          * Sign in the Google client
@@ -100,7 +66,7 @@ export const VueGapi = {
                 if (this.signInState != SignInState.SIGNED_OUT) {
                     throw new VueGapiCannotSignInOrOutError(this.signInState, 'sign in');
                 }
-                this.signingIn = logAction.async('signing in', this.authInstance.signIn())
+                this.signingIn = logAction.async('signing in', this.gapi.authInstance.getAuthInstance().signIn())
             }
             try {
                 return await this.signingIn
@@ -113,7 +79,7 @@ export const VueGapi = {
                 if (this.signInState != SignInState.SIGNED_IN) {
                     throw new VueGapiCannotSignInOrOutError(this.signInState, 'sign out');
                 }
-                this.signingOut = logAction.async('signing out', this.authInstance.signOut())
+                this.signingOut = logAction.async('signing out', this.gapi.authInstance.getAuthInstance().signOut())
             }
             try {
                 return await this.signingOut
@@ -121,36 +87,44 @@ export const VueGapi = {
                 this.signingOut = null
             }
         },
-        loadDiscoveryDoc: async function(discoveryDoc) {
-            if (this.client) {
-                return await logAction.async(`loading Google API discovery doc ${discoveryDoc} ...`, this.client.load(discoveryDoc))
-            }
+        query: async function(description, query, result) {
+            let gapi = await this.$gapi.gapiPromise
+            let response = await logAction.async(description, query(gapi.client))
+            return result ? result(response.result) : response
         },
-        query: async function(description, query) {
-            if (this.client) {
-                return await logAction.async(description, query(this.client))
-            }
-        },
-    },
-    watch: {
-        signInState: function(signInState) { console.warn(signInState) },
-        authInstance: async function(authInstance) {
-            if (authInstance) {
-                this.isSignedIn = authInstance.isSignedIn.get()
-                authInstance.isSignedIn.listen(isSignedIn => {
-                    this.isSignedIn = isSignedIn
-                });
-                this.currentUser = authInstance.currentUser.get()
-                authInstance.currentUser.listen(currentUser => {
-                    this.currentUser = currentUser
-                });
-                this.isInitialized = true
+
+        $_updateCurrentUser: function(user) {
+            if (user) {
+                let profile = user.getBasicProfile()
+                this.currentUser = {
+                    id: user.getId(),
+                    hostedDomain: user.getHostedDomain(),
+                    grantedScopes: user.getGrantedScopes(),
+                    profileId: profile.getId(),
+                    name: profile.getName(),
+                    givenName: profile.getGivenName(),
+                    familyName: profile.getFamilyName(),
+                    imageUrl: profile.getImageUrl(),
+                    email: profile.getEmail(),
+                }
             } else {
-                this.isSignedIn = null
-                this.currentUser = null
+                this.currentUser = {}
             }
+        },
+
+        $_initialize: async function() {
+            let gapi = await VueGapi.initializedGapiPromise
+            let authInstance = await gapi.auth2.getAuthInstance()
+        
+            // Listen for isSignedIn and currentUser
+            authInstance.isSignedIn.listen(isSignedIn => { this.isSignedIn = isSignedIn })
+            this.isSignedIn = authInstance.isSignedIn.get()
+            authInstance.currentUser.listen(this.$_updateCurrentUser)
+            this.$_updateCurrentUser(authInstance.currentUser.get())
+
+            this.gapi = gapi
+
+            return gapi
         },
     },
 }
-
-export default VueGapi

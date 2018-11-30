@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import VueGapi from './VueGapi'
-import { VueGapiRequiredArgumentError, VueGapiAlreadyInstalledError } from './VueGapiError'
+import { VueGapiRequiredArgumentError } from './VueGapiError'
+import AsyncComputed from 'vue-async-computed'
 
 // Re-export SignInState and errors for people who use the library
 export { SignInState } from './VueGapi'
@@ -24,13 +25,7 @@ export default {
      * @param {Array} clientConfig.discoveryDocs Discovery Docs for the APIs you want to use, which will be loaded into the client automatically.
      */
     install(Vue, { clientId = isRequired('clientId'), scope = isRequired('scope'), discoveryDocs = [] } = {}) {
-        if (Vue.prototype.$gapi) {
-            throw new VueGapiAlreadyInstalledError('VueGapi has already been installed! (Vue.prototype.$gapi is already set.)')
-        }
-        // Set configuration
-        VueGapi.data.clientId = clientId
-        VueGapi.data.scope = scope
-        VueGapi.data.discoveryDocs = discoveryDocs
-        Vue.prototype.$gapi = new Vue(VueGapi)
+        Vue.use(AsyncComputed)
+        VueGapi.install(Vue, { clientId, scope, discoveryDocs })
     },
 }

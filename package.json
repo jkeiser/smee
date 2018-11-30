@@ -11,6 +11,7 @@
     "jquery": "^3.3.1",
     "loadjs": "^3.5.4",
     "log-timestamp": "^0.2.1",
+    "mailparser": "^2.4.3",
     "moment": "^2.22.2",
     "semantic-ui-css": "^2.4.1",
     "timing2": "^0.3.3",

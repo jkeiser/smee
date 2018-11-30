@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import loadjs from 'loadjs'
-import logAction from './logaction'
+import logAction from '../../scripts/logaction'
 
 /**
  * URL to gapi.js
@@ -34,6 +34,20 @@ async function loadGapi() {
     await logAction.promise(`loading gapi modules ${GapiLibraries}`, (resolve, reject) =>
         gapi.load(GapiLibraries, { callback: resolve, onerror: reject })
     )
+    return gapi
+}
+
+export async function initializeGapi({clientId, scope, discoveryDocs}) {
+    let gapi = await import('./loadgapi').then(loadgapi => loadgapi.LoadedGapi)
+    await logAction.async(
+        `initializing gapi.auth2 with client_id ${clientId} and scope ${scope}`,
+        gapi.auth2.init({client_id: clientId, scope})
+    )
+    await logAction.async(
+        `initializing gapi.client with clientId ${clientId}, scope ${scope}, and discoveryDocs ${discoveryDocs}`,
+        gapi.client.init({ clientId, scope, discoveryDocs })
+    )
+
     return gapi
 }
 
