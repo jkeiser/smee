@@ -25,6 +25,10 @@ var router = new VueRouter({
             redirect: '/captainslog',
         },
         {
+            path: '/test',
+            component: () => import('./pages/ReactivityTest')
+        },
+        {
             name: 'captainslog',
             path: '/captainslog',
             component: () => import('./pages/CaptainsLog'),

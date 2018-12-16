@@ -1,3 +1,3 @@
 <template>
-    <sui-message error>Page not found!</sui-message>
+    <div class="ui message" error>Page not found!</div>
 </template>

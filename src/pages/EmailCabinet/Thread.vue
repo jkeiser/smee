@@ -1,13 +1,14 @@
 <template>
     <div class="item">
         <div class="content">
-            <div class="header" v-if="initialSender">
-                <a :href="`mailto:${initialSender.address}`">
-                    <span v-if="initialSender.name" class="ThreadEmailAddressName">{{initialSender.name}}</span>
-                    <span v-else :class="ThreadEmailAddressHeader">{{initialSender.address}}</span>
+            <div class="header" v-if="sender">
+                <a :href="`mailto:${sender.address}`">
+                    <span v-if="sender.name" class="ThreadEmailAddressName">{{sender.name}}</span>
+                    <span v-else class="ThreadEmailAddressHeader">{{sender.address}}</span>
                 </a>
             </div>
             <div class="ui header placeholder" v-else></div>
+            <Label v-for="label in labels" v-bind:key="label.id" v-bind="label" />
             <div class="description">{{snippet}}</div>
         </div>
     </div> 
@@ -18,6 +19,7 @@
 </style>
 
 <script>
+import Label from './Label'
 import addressparser from 'nodemailer/lib/addressparser'
 
 function getHeader(message, name) {
@@ -36,36 +38,37 @@ export default {
         id: String,
         snippet: String,
         historyId: String,
+        allLabels: Array,
     },
     computed: {
-        senders: function() {
-            if (!this.messages) { return null }
-            return new Set(this.messages.map(message => getAddressHeader(message, 'From')))
+        sender: function() {
+            if (!this.thread) { return null }
+            let initialMessage = this.thread.messages[0]
+            return getAddressHeader(initialMessage, 'From')[0]
         },
-        initialSender: function() {
-            if (!this.messages) { return null }
-            let firstValue = this.senders.values().next()
-            if (firstValue) { return firstValue.value[0] }
+        gmailThreadUrl: function() {
+            return `https://mail.google.com/mail/#inbox/${this.id}`
         },
         labels: function() {
-            if (!this.messages) { return null }
-            return new Set(this.messages.map(message => message.labels))
+            if (!this.thread || !this.allLabels) { return null }
+            let labelIds = this.thread.labelIds
+            if (!labelIds) { labelIds = [] }
+            labelIds = labelIds.concat(
+                this.thread.messages.flatMap(message => message.labelIds)
+            )
+            labelIds = Array.from(new Set(labelIds))
+            return labelIds.map(labelId => this.allLabels.find(label => label.id == labelId))
         },
     },
     asyncComputed: {
-        messages: async function() {
-            return await this.$gapi.query(
-                `getting message headers for thread ${this.id}`,
-                client => client.gmail.users.threads.get({
-                    // Use the actual user id rather than 'me' so that if the
-                    // user changes, the query will be automatically rerun
-                    'userId': this.$gapi.currentUser.id,
-                    'id': this.id,
-                    'fields': 'messages(id,threadId,historyId,labelIds,internalDate,payload(headers))',
-                }),
-                result => result.messages.reverse(),
+        thread: async function() {
+            return this.$gapi.query(
+                `thread ${this.id}`,
+                client => client.gmail.users.threads.get({ userId: this.$gapi.userId, id: this.id, format: 'metadata' }),
+                result => result,
             )
-        },
+        }
     },
+    components: { Label }
 }
 </script>

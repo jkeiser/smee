@@ -1,6 +1,4 @@
 import logAction from '../../scripts/logaction'
-import Vue from 'vue';
-import VueGapiQuery from './VueGapiQuery'
 
 export default {
     props: {

@@ -36,6 +36,11 @@ const VueGapi = {
         }
     },
     computed: {
+        userId: function() {
+            if (this.currentUser) {
+                return this.currentUser.id
+            }
+        },
         isInitialized: function() {
             return !!this.gapi
         },
@@ -88,6 +93,7 @@ const VueGapi = {
             }
         },
         query: async function(description, query, result) {
+            if (!this.userId) { return null }
             let gapi = await this.$gapi.gapiPromise
             let response = await logAction.async(description, query(gapi.client))
             return result ? result(response.result) : response
