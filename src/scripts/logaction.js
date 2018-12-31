@@ -10,6 +10,7 @@ function logAction(actionDescription, action) {
     } catch (err) {
         console.error(`Failed ${actionDescription}:`)
         console.error(err)
+        throw err
     }
 }
 
@@ -22,6 +23,7 @@ async function logActionAsync(actionDescription, promise) {
     } catch (err) {
         console.error(`Failed ${actionDescription}:`)
         console.error(err)
+        throw err
     }
 }
 

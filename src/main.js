@@ -38,9 +38,9 @@ Vue.use(VueGapi, {
         'https://www.googleapis.com/auth/cloud-platform',
     ].join(' '),
     discoveryDocs: [
-        'https://speech.googleapis.com/$discovery/rest?version=v1p1beta1',
         'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
         'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest',
+        'https://speech.googleapis.com/$discovery/rest?version=v1p1beta1',
     ],
 })
 
