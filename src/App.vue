@@ -22,15 +22,15 @@ var router = new VueRouter({
     routes: [
         {
             path: '/',
-            redirect: '/captainslog',
+            redirect: '/captains-log',
         },
         {
             path: '/test',
             component: () => import('./pages/ReactivityTest')
         },
         {
-            name: 'captainslog',
-            path: '/captainslog',
+            name: 'captains-log',
+            path: '/captains-log',
             component: () => import('./pages/CaptainsLog'),
             meta: {
                 nav: {
@@ -40,8 +40,8 @@ var router = new VueRouter({
             }
         },
         {
-            name: 'emailcabinet',
-            path: '/emailcabinet',
+            name: 'email-cabinet',
+            path: '/email-cabinet',
             component: () => import('./pages/EmailCabinet'),
             meta: {
                 nav: {
@@ -49,6 +49,17 @@ var router = new VueRouter({
                     icon: 'anchor',
                 }
             },
+        },
+        {
+            name: 'podcast-editor',
+            path: '/podcast-editor',
+            component: () => import('./pages/PodcastEditor'),
+            meta: {
+                nav: {
+                    title: 'Podcast',
+                    icon: 'quote left',
+                }
+            }
         },
         { path: '*', component: () => import('./pages/NotFound') },
     ]

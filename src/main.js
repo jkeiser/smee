@@ -32,8 +32,16 @@ import VueGapi from './plugins/VueGapi'
 import credentials from '../credentials.json'
 Vue.use(VueGapi, {
     clientId: credentials['web']['client_id'],
-    scope: 'https://www.googleapis.com/auth/gmail.readonly',
-    discoveryDocs: [ 'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest' ],
+    scope: [
+        'https://www.googleapis.com/auth/drive',
+        'https://www.googleapis.com/auth/gmail.readonly',
+        'https://www.googleapis.com/auth/cloud-platform',
+    ].join(' '),
+    discoveryDocs: [
+        'https://speech.googleapis.com/$discovery/rest?version=v1p1beta1',
+        'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
+        'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest',
+    ],
 })
 
 // Add Router
