@@ -29,8 +29,9 @@ Vue.use(AsyncComputed)
 
 // Bring in VueGapi
 import VueGapi from './plugins/VueGapi'
+import credentials from '../credentials.json'
 Vue.use(VueGapi, {
-    clientId: '662782559552-gppt0aji4fop5bqndkdpah5epkfbcsnv.apps.googleusercontent.com',
+    clientId: credentials['web']['client_id'],
     scope: 'https://www.googleapis.com/auth/gmail.readonly',
     discoveryDocs: [ 'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest' ],
 })

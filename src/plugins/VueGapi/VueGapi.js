@@ -71,7 +71,7 @@ const VueGapi = {
                 if (this.signInState != SignInState.SIGNED_OUT) {
                     throw new VueGapiCannotSignInOrOutError(this.signInState, 'sign in');
                 }
-                this.signingIn = logAction.async('signing in', this.gapi.authInstance.getAuthInstance().signIn())
+                this.signingIn = logAction.async('signing in', this.gapi.auth2.getAuthInstance().signIn())
             }
             try {
                 return await this.signingIn
@@ -84,7 +84,7 @@ const VueGapi = {
                 if (this.signInState != SignInState.SIGNED_IN) {
                     throw new VueGapiCannotSignInOrOutError(this.signInState, 'sign out');
                 }
-                this.signingOut = logAction.async('signing out', this.gapi.authInstance.getAuthInstance().signOut())
+                this.signingOut = logAction.async('signing out', this.gapi.auth2.getAuthInstance().signOut())
             }
             try {
                 return await this.signingOut
@@ -126,7 +126,9 @@ const VueGapi = {
             authInstance.isSignedIn.listen(isSignedIn => { this.isSignedIn = isSignedIn })
             this.isSignedIn = authInstance.isSignedIn.get()
             authInstance.currentUser.listen(this.$_updateCurrentUser)
-            this.$_updateCurrentUser(authInstance.currentUser.get())
+            if (this.isSignedIn) {
+                this.$_updateCurrentUser(authInstance.currentUser.get())
+            }
 
             this.gapi = gapi
 

@@ -3,7 +3,8 @@ node_modules
 /dist
 
 # Sensitive files
-credentials.json
+/credentials.json
+/gremlinconfig.js
 
 # local env files
 .env.local

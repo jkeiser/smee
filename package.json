@@ -18,7 +18,7 @@
     "timing2": "^0.3.3",
     "vue": "^2.5.17",
     "vue-async-computed": "^3.5.0",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.1.1",
